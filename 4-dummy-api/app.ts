@@ -11,7 +11,7 @@ interface User {
   firstName: string;
   lastName: string;
   age: number;
-  email: string;
+  email: string; 
 }
 
 interface UsersResponse {
