@@ -1,18 +1,25 @@
-function allowFunc(validator: (val: any) => boolean) {
-  return function (
-    target: any,
-    context: ClassAccessorDecoratorContext
-  ) {
-    let value: any;
+function allowFunc<T>(validator: (value: T) => boolean, defaultValue: T) {
+  return function (target: any, context: ClassAccessorDecoratorContext) {
+    let value: T;
     return {
       get() { return value; },
-      set(newVal: any) { if (validator(newVal)) value = newVal; }
+      set(newVal: T) {
+        if (validator(newVal)) value = newVal;
+      },
+      init(initialValue: T) {
+        if (!validator(initialValue)) {
+          value = defaultValue;
+        } else {
+          value = initialValue;
+        }
+        return value;
+      }
     };
   };
 }
 
 class User {
-  @allowFunc((a: number) => a > 0)
+  @allowFunc<number>(a => a > 0, 1)
   accessor age: number = 30;
 }
 
